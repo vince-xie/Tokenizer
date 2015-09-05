@@ -1,6 +1,11 @@
-/*
- * tokenizer.c
- */
+//
+//  main.c
+//  Tokenizer
+//
+//  Created by Vince Xie on 9/5/15.
+//  Copyright (c) 2015 Vince Xie, Jacob Rizer. All rights reserved.
+//
+
 #include <stdio.h>
 
 /*
