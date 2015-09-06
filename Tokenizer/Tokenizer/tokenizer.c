@@ -6,13 +6,17 @@
 //  Copyright (c) 2015 Vince Xie, Jacob Rizer. All rights reserved.
 //
 
+#include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 /*
  * Tokenizer type.  You need to fill in the type as part of your implementation.
  */
 
 struct TokenizerT_ {
+    char *current;
+    char *token;
 };
 
 typedef struct TokenizerT_ TokenizerT;
@@ -32,8 +36,10 @@ typedef struct TokenizerT_ TokenizerT;
  */
 
 TokenizerT *TKCreate( char * ts ) {
-
-  return NULL;
+    TokenizerT *token = (TokenizerT *)malloc(sizeof(TokenizerT *));
+    token->token = (char *)malloc(sizeof(char *));
+    token->current = ts;
+    return token;
 }
 
 /*
@@ -44,6 +50,8 @@ TokenizerT *TKCreate( char * ts ) {
  */
 
 void TKDestroy( TokenizerT * tk ) {
+    free(tk->token);
+    free(tk);
 }
 
 /*
@@ -59,8 +67,25 @@ void TKDestroy( TokenizerT * tk ) {
  */
 
 char *TKGetNextToken( TokenizerT * tk ) {
-
-  return NULL;
+    for(int i = 0; i < strlen(tk->current); i++){
+        if(tk->current[i] == ' '){
+            if(i != 0){
+               strncpy(tk->token, tk->current, i);
+               tk->token[i] = '\0';
+               tk->current = &tk->current[i + 1];
+               return tk->token;
+            } else {
+                tk->current = &tk->current[i + 1];
+            }
+        }
+        if(tk->current[i + 1] == '\0'){
+            strncpy(tk->token, tk->current, i + 1);
+            tk->token[i + 1] = '\0';
+            tk->current = &tk->current[i + 1];
+            return tk->token;
+        }
+    }
+    return NULL;
 }
 
 /*
@@ -71,6 +96,12 @@ char *TKGetNextToken( TokenizerT * tk ) {
  */
 
 int main(int argc, char **argv) {
-
-  return 0;
+    printf("%s", argv[1]);
+    TokenizerT *tk = TKCreate(argv[1]);
+    while(tk->current[0] != '\0'){
+        char *token = TKGetNextToken(tk);
+        printf("\n%s", token);
+    }
+    TKDestroy(tk);
+    return 0;
 }
