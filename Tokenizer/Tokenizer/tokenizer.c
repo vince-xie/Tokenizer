@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
 /*
  * Contains the types of tokens available
@@ -22,8 +23,9 @@ enum Type{
     C_OPERATOR,
     C_KEYWORD,
     C_COMMENT,
-    QUOTES
-};
+    QUOTES,
+    MAL
+} type;
 
 /*
  * Tokenizer type.  You need to fill in the type as part of your implementation.
@@ -32,7 +34,6 @@ enum Type{
 struct TokenizerT_ {
     char *current;
     char *token;
-    enum Type type;
 };
 
 typedef struct TokenizerT_ TokenizerT;
@@ -84,21 +85,34 @@ void TKDestroy( TokenizerT * tk ) {
 
 char *TKGetNextToken( TokenizerT * tk ) {
     for(int i = 0; i < strlen(tk->current); i++){
-        if(tk->current[i] == ' '){
-            if(i != 0){
-               strncpy(tk->token, tk->current, i);
-               tk->token[i] = '\0';
-               tk->current = &tk->current[i + 1];
-               return tk->token;
-            } else {
-                tk->current = &tk->current[1]; //deals with case of spaces in the beginning of input
-                i--;
+        while(tk->current[i] == 0x20 || tk->current[i] == 0x09 || tk->current[i] == 0x0b || tk->current[i] == 0x0c || tk->current[i] == 0x0a || tk->current[i] == 0x0d){
+            tk->current = &tk->current[1]; //deals with case of spaces in the beginning of input, multiple spaces
+        }
+        if(isalpha(tk->current[i])){
+            for(int j = i; j < strlen(tk->current); j++){
+                if(tk->current[j] == 0x20 || tk->current[j] == 0x09 || tk->current[j] == 0x0b || tk->current[j] == 0x0c || tk->current[j] == 0x0a || tk->current[j] == 0x0d || !isalpha(tk->current[j]) || tk->current[j + 1] == '\0'){
+                    if(j == 0){ j = 1; }
+                    strncpy(tk->token, tk->current, j);
+                    tk->token[j] = '\0';
+                    tk->current = &tk->current[j];
+                    type = WORD;
+                    return tk->token;
+                }
             }
         }
-        if(tk->current[i + 1] == '\0'){
-            strncpy(tk->token, tk->current, i + 1);
-            tk->token[i + 1] = '\0';
-            tk->current = &tk->current[i + 1];
+        if(isnumber(tk->current[i])){
+            if(i == 0){ i = 1; }
+            strncpy(tk->token, tk->current, i);
+            tk->token[i] = '\0';
+            tk->current = &tk->current[i];
+            type = DECIMAL; //temp
+            return tk->token;
+        } else if(!isalpha(tk->current[i]) && !isnumber(tk->current[i]) && tk->current[i] != '\0'){
+            if(i == 0){ i = 1; }
+            strncpy(tk->token, tk->current, i);
+            tk->token[i] = '\0';
+            tk->current = &tk->current[i];
+            type = C_OPERATOR; //temp
             return tk->token;
         }
     }
@@ -113,11 +127,45 @@ char *TKGetNextToken( TokenizerT * tk ) {
  */
 
 int main(int argc, char **argv) {
-    printf("%s", argv[1]);
     TokenizerT *tk = TKCreate(argv[1]);
     while(tk->current[0] != '\0'){
         char *token = TKGetNextToken(tk);
-        printf("\n%s", token);
+        if(token == NULL){
+            break;
+        }
+        switch(type){
+            case WORD:
+                printf("Word");
+                break;
+            case DECIMAL:
+                printf("Decimal");
+                break;
+            case OCTAL:
+                printf("Octal");
+                break;
+            case HEX:
+                printf("Hex");
+                break;
+            case FLOATING_POINT:
+                printf("Floating Point");
+                break;
+            case C_OPERATOR:
+                printf("C Operator"); //temporary
+                break;
+            case C_KEYWORD:
+                //coming soon
+                break;
+            case C_COMMENT:
+                printf("C Comment");
+                break;
+            case QUOTES:
+                printf("Quotes");
+                break;
+            case MAL:
+                printf("Error");
+                break;
+        }
+        printf(" \"%s\"\n", token);
     }
     TKDestroy(tk);
     return 0;
