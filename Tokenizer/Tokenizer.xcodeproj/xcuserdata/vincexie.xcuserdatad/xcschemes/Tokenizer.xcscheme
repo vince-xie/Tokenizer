@@ -60,7 +60,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "&quot;test tokens if 3 + 53 test&quot;"
+            argument = "&quot;  test tokens if 3 + 53 test&quot;"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

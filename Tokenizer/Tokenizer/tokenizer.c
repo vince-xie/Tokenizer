@@ -10,6 +10,17 @@
 #include <stdio.h>
 #include <string.h>
 
+//Contains the types of tokens available
+enum Type{
+    WORD,
+    DECIMAL,
+    OCTAL,
+    HEX,
+    FLOATING_POINT,
+    C_OPERATOR,
+    C_KEYWORD
+};
+
 /*
  * Tokenizer type.  You need to fill in the type as part of your implementation.
  */
@@ -17,6 +28,7 @@
 struct TokenizerT_ {
     char *current;
     char *token;
+    enum Type type;
 };
 
 typedef struct TokenizerT_ TokenizerT;
@@ -75,7 +87,8 @@ char *TKGetNextToken( TokenizerT * tk ) {
                tk->current = &tk->current[i + 1];
                return tk->token;
             } else {
-                tk->current = &tk->current[i + 1];
+                tk->current = &tk->current[1]; //deals with case of spaces in the beginning of input
+                i--;
             }
         }
         if(tk->current[i + 1] == '\0'){
