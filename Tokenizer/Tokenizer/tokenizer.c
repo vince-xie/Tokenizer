@@ -10,7 +10,9 @@
 #include <stdio.h>
 #include <string.h>
 
-//Contains the types of tokens available
+/*
+ * Contains the types of tokens available
+ */
 enum Type{
     WORD,
     DECIMAL,
@@ -18,7 +20,9 @@ enum Type{
     HEX,
     FLOATING_POINT,
     C_OPERATOR,
-    C_KEYWORD
+    C_KEYWORD,
+    C_COMMENT,
+    QUOTES
 };
 
 /*
