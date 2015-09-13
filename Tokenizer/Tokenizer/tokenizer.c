@@ -41,7 +41,7 @@ typedef struct TokenizerT_ TokenizerT;
 /*
  * TKCreate creates a new TokenizerT object for a given token stream
  * (given as a string).
- * 
+ *
  * TKCreate should copy the arguments so that it is not dependent on
  * them staying immutable after returning.  (In the future, this may change
  * to increase efficiency.)
@@ -88,9 +88,54 @@ char *TKGetNextToken( TokenizerT * tk ) {
         while(tk->current[i] == 0x20 || tk->current[i] == 0x09 || tk->current[i] == 0x0b || tk->current[i] == 0x0c || tk->current[i] == 0x0a || tk->current[i] == 0x0d){
             tk->current = &tk->current[1]; //deals with case of spaces in the beginning of input, multiple spaces
         }
+        if(tk->current[i] == 0x27){
+            for(int j = 1; j < strlen(tk->current); j++){
+                if(tk->current[j] == 0x27){
+                    strncpy(tk->token, tk->current, j + 1);
+                    tk->token[j + 1] = '\0';
+                    tk->current = &tk->current[j + 1];
+                    type = QUOTES;
+                    return tk->token;
+                }
+            }
+        }
+        if(tk->current[i] == 0x22){
+            for(int j = 1; j < strlen(tk->current); j++){
+                if(tk->current[j] == 0x22){
+                    strncpy(tk->token, tk->current, j);
+                    tk->token[j] = '\0';
+                    tk->current = &tk->current[j];
+                    type = QUOTES;
+                    return tk->token;
+                }
+            }
+        }
+        if(tk->current[i] == '/' && tk->current[i + 1] == '*'){
+            for(int j = 2; j < strlen(tk->current); j++){
+                if(tk->current[j] == '*' && tk->current[j + 1] == '/'){
+                    strncpy(tk->token, tk->current, j + 2);
+                    tk->token[j + 2] = '\0';
+                    tk->current = &tk->current[j + 2];
+                    type = C_COMMENT;
+                    return tk->token;
+                }
+            }
+        }
+        if(tk->current[i] == '/' && tk->current[i + 1] == '/'){
+            for(int j = 2; j < strlen(tk->current); j++){
+                if(tk->current[j] == '\n'){
+                    strncpy(tk->token, tk->current, j + 2);
+                    tk->token[j + 2] = '\0';
+                    tk->current = &tk->current[j + 2];
+                    type = C_COMMENT;
+                    return tk->token;
+                }
+            }
+            return NULL;
+        }
         if(isalpha(tk->current[i])){
-            for(int j = i; j < strlen(tk->current); j++){
-                if(tk->current[j] == 0x20 || tk->current[j] == 0x09 || tk->current[j] == 0x0b || tk->current[j] == 0x0c || tk->current[j] == 0x0a || tk->current[j] == 0x0d || !isalpha(tk->current[j]) || tk->current[j + 1] == '\0'){
+            for(int j = i; j <= strlen(tk->current); j++){
+                if(tk->current[j] == 0x20 || tk->current[j] == 0x09 || tk->current[j] == 0x0b || tk->current[j] == 0x0c || tk->current[j] == 0x0a || tk->current[j] == 0x0d || !isalpha(tk->current[j]) || tk->current[j] == '\0'){
                     if(j == 0){ j = 1; }
                     strncpy(tk->token, tk->current, j);
                     tk->token[j] = '\0';
@@ -105,14 +150,14 @@ char *TKGetNextToken( TokenizerT * tk ) {
             strncpy(tk->token, tk->current, i);
             tk->token[i] = '\0';
             tk->current = &tk->current[i];
-            type = DECIMAL; //temp
+            type = DECIMAL; //temporary
             return tk->token;
         } else if(!isalpha(tk->current[i]) && !isnumber(tk->current[i]) && tk->current[i] != '\0'){
             if(i == 0){ i = 1; }
             strncpy(tk->token, tk->current, i);
             tk->token[i] = '\0';
             tk->current = &tk->current[i];
-            type = C_OPERATOR; //temp
+            type = C_OPERATOR; //temporary
             return tk->token;
         }
     }
@@ -156,7 +201,6 @@ int main(int argc, char **argv) {
                 //coming soon
                 break;
             case C_COMMENT:
-                printf("C Comment");
                 break;
             case QUOTES:
                 printf("Quotes");
@@ -165,7 +209,9 @@ int main(int argc, char **argv) {
                 printf("Error");
                 break;
         }
-        printf(" \"%s\"\n", token);
+        if(type != C_COMMENT){
+            printf(" \"%s\"\n", token);
+        }
     }
     TKDestroy(tk);
     return 0;
