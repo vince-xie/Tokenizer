@@ -55,8 +55,8 @@ typedef struct TokenizerT_ TokenizerT;
  */
 
 TokenizerT *TKCreate( char * ts ) {
-    TokenizerT *token = (TokenizerT *)malloc(sizeof(TokenizerT *));
-    token->token = (char *)malloc(sizeof(char *));
+    TokenizerT *token = (TokenizerT *)malloc(sizeof(TokenizerT));
+    token->token = (char *)malloc(strlen(ts) + 1);
     token->current = ts;
     return token;
 }
