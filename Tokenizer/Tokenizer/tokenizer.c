@@ -73,7 +73,6 @@ void TKDestroy( TokenizerT * tk ) {
     free(tk);
 }
 
-
 /*
  * printOperator is called upon encountering a symbol in the string that belongs to a C Operator.
  * It uses a switch statement on the first character of the string and then determines the full operator,
@@ -81,421 +80,416 @@ void TKDestroy( TokenizerT * tk ) {
  * the current string pointer past the operator to advance on to the next token.
  */
 void printOperator(TokenizerT * tk){
-	
-	char first;
-	int bool;
-	
-	char * token = tk->current;
-	
-	if(token == NULL){
-		return;
-	}
-	
-	first = token[0];
-	
-	switch(first){
-	
-		case '(':
-		
-			tk->token[0] = '(';
-			tk->token[1] = '\0';
-		
-			printf("leftparenthesis");
-			tk->current = tk->current+1;
-			break;
-		
-		case ')':
-		
-			tk->token[0] = ')';
-			tk->token[1] = '\0';
-		
-			printf("rightparenthesis");
-			tk->current = tk->current+1;
-			break;
-		
-		case '[':
-		
-			tk->token[0] = '[';
-			tk->token[1] = '\0';
-		
-			printf("leftbrace");
-			tk->current = tk->current+1;
-			break;
-		
-		case ']':
-		
-			tk->token[0] = ']';
-			tk->token[1] = '\0';
-		
-			printf("rightbrace");
-			tk->current = tk->current+1;
-			break;
-		
-		case '.':
-		
-			tk->token[0] = '.';
-			tk->token[1] = '\0';
-		
-			printf("structuremember");
-			tk->current = tk->current+1;
-			break;
-			
-			
-			//CONTINUE HERE
-		
-		case '=':
-			
-			tk->token[0] = '=';
-			
-			
-			if(token[1] == '='){
-			
-				tk->token[1] = '=';
-				tk->token[2] = '\0';
-			
-				printf("equals");
-				tk->current = tk->current+2;
-			}else{
-			
-				tk->token[1] = '\0';
-			
-				printf("assign");
-				tk->current = tk->current+1;
-			}
-			
-			break;
-			
-		case '+':
-		
-			tk->token[0] = '+';
-		
-			if(token[1] == '+'){
-			
-				tk->token[1] = '+';
-				tk->token[2] = '\0';
-			
-				printf("increment");
-				tk->current = tk->current+2;
-			}else if(token[1] == '='){
-			
-				tk->token[1] = '=';
-				tk->token[2] = '\0';
-			
-				printf("plusequals");
-				tk->current = tk->current+2;
-			}else{
-			
-				tk->token[1] = '\0';
-			
-				printf("plus");
-				tk->current = tk->current+1;
-			}
-		
-			
-			break;
-		
-		case '-':
-		
-			tk->token[0] = '-';
-		
-			if(token[1] == '-'){
-			
-				tk->token[1] = '-';
-				tk->token[2] = '\0';
-			
-				printf("decrement");
-				tk->current = tk->current+2;
-			}else if(token[1] == '='){
-			
-				tk->token[1] = '=';
-				tk->token[2] = '\0';
-			
-				printf("minusequals");
-				tk->current = tk->current+2;
-			}else if(token[1] == '>'){
-			
-				tk->token[1] = '>';
-				tk->token[2] = '\0';
-			
-				printf("structurepointer");
-				tk->current = tk->current+2;
-			}else{
-			
-				tk->token[1] = '\0';
-							
-				printf("minus");
-				tk->current = tk->current+1;
-			}
-		
-			
-			break;
-			
-		case '*':
-		
-			tk->token[0] = '*';
-				
-		
-			if(token[1] == '='){
-			
-				tk->token[1] = '=';
-				tk->token[2] = '\0';
-			
-				printf("timesequals");
-				tk->current = tk->current+2;
-			}else{
-			
-				tk->token[1] = '\0';
-			
-				printf("multiply");
-				tk->current = tk->current+1;
-			}
-		
-			
-			break;
-			
-		case '/':
-		
-			tk->token[0] = '/';				
-		
-			if(token[1] == '='){
-			
-				tk->token[1] = '=';
-				tk->token[2] = '\0';
-			
-				printf("divideequals");
-				tk->current = tk->current+2;
-			}else{
-				
-				tk->token[1] = '\0';
-			
-				printf("divide");
-				tk->current = tk->current+1;
-			}
-		
-			
-			break;	
-			
-		case '&':
-		
-			tk->token[0] = '&';
-		
-			if(token[1] == '='){
-			
-				tk->token[1] = '=';
-				tk->token[2] = '\0';
-			
-				printf("bitwiseandequals");
-				tk->current = tk->current+2;
-			}else if(token[1] == '&'){
-			
-				tk->token[1] = '&';
-				tk->token[2] = '\0';
-			
-				printf("logicaland");
-				tk->current = tk->current+2;
-			}else{
-			
-				tk->token[1] = '\0';
-			
-				printf("bitwiseand");
-				tk->current = tk->current+1;
-			}
-		
-			
-			break;	
-			
-		case '%':
-		
-			tk->token[0] = '%';
-		
-			if(token[1] == '='){
-			
-				tk->token[1] = '=';
-				tk->token[2] = '\0';
-			
-				printf("modulusequals");
-				tk->current = tk->current+2;
-			}else{
-			
-				tk->token[1] = '\0';
-			
-				printf("modulus");
-				tk->current = tk->current+1;
-			}
-			
-			break;
-			
-		case '^':
-		
-			tk->token[0] = '^';
-				
-		
-			if(token[1] == '='){
-			
-				tk->token[1] = '=';
-				tk->token[2] = '\0';
-			
-				printf("bitwiseexclusiveorequals");
-				tk->current = tk->current+2;
-			}else{
-			
-				tk->token[1] = '\0';
-			
-				printf("bitwiseexclusiveor");
-				tk->current = tk->current+1;
-			}
-			
-			break;
-			
-		
-		case '|':
-		
-			tk->token[0] = '|';
-				
-		
-			if(token[1] == '='){
-			
-				tk->token[1] = '=';
-				tk->token[2] = '\0';
-			
-				printf("bitwiseorequals");
-				tk->current = tk->current+2;
-			}else if(token[1] == '|'){
-			
-				tk->token[1] = '|';
-				tk->token[2] = '\0';
-			
-				printf("logicalor");
-				tk->current = tk->current+2;
-			}else{
-			
-				tk->token[1] = '\0';
-			
-				printf("bitwiseor");
-				tk->current = tk->current+1;
-			}
-			
-			break;
-			
-		
-		case '<':
-		
-			tk->token[0] = '<';
-		
-			if(token[1] == '='){
-				
-				tk->token[1] = '=';
-				tk->token[2] = '\0';
-			
-				printf("lessorequal");
-				tk->current = tk->current+2;
-			}else if(token[1] == '<'){
-				
-				tk->token[1] = '<';
-			
-				if(token[2] == '='){
-				
-					tk->token[2] = '=';
-					tk->token[3] = '\0';
-				
-					printf("shiftleftequals");
-					tk->current = tk->current+3;
-				}else{
-				
-					tk->token[2] = '\0';
-				
-					printf("shiftleft");
-					tk->current = tk->current+2;
-				}
-			}else{
-				
-				tk->token[1] = '\0';
-			
-				printf("lessthan");
-				tk->current = tk->current+1;
-			}
-			
-			break;
-			
-		case '>':
-		
-			tk->token[0] = '>';
-		
-			if(token[1] == '='){
-			
-				tk->token[1] = '=';
-				tk->token[2] = '\0';
-			
-				printf("greaterorequal");
-				tk->current = tk->current+2;
-			}else if(token[1] == '>'){
-			
-				tk->token[1] = '>';
-			
-				if(token[2] == '='){
-				
-					tk->token[2] = '=';
-					tk->token[3] = '\0';
-				
-					printf("shiftrightequals");
-					tk->current = tk->current+3;
-				}else{
-				
-					tk->token[2] = '\0';
-				
-					printf("shiftright");
-					tk->current = tk->current+2;
-				}
-			}else{
-			
-				tk->token[1] = '\0';
-			
-				printf("greaterthan");
-				tk->current = tk->current+1;
-			}
-			
-			break;
-		
-		
-		case '!':
-		
-			tk->token[0] = '!';
-		
-			if(token[1] == '='){
-			
-				tk->token[1] = '=';
-				tk->token[2] = '\0';
-			
-				printf("notequals");
-				tk->current = tk->current+2;
-			}else{
-				
-				tk->token[1] = '\0';
-			
-				printf("negate");
-				tk->current = tk->current+1;
-			}
-			
-			break;
-			
-		
-		case '~':
-		
-			tk->token[0] = '~';
-			tk->token[1] = '\0';
-		
-			printf("onescomplement");
-			tk->current = tk->current+1;
-		
-			break;
-		
-	}
-	
-	
-	
-	
-	
- }
+    
+    char first;
+    int bool;
+    
+    char * token = tk->current;
+    
+    if(token == NULL){
+        return;
+    }
+    
+    first = token[0];
+    
+    switch(first){
+            
+        case '(':
+            
+            tk->token[0] = '(';
+            tk->token[1] = '\0';
+            
+            printf("leftparenthesis");
+            tk->current = tk->current+1;
+            break;
+            
+        case ')':
+            
+            tk->token[0] = ')';
+            tk->token[1] = '\0';
+            
+            printf("rightparenthesis");
+            tk->current = tk->current+1;
+            break;
+            
+        case '[':
+            
+            tk->token[0] = '[';
+            tk->token[1] = '\0';
+            
+            printf("leftbrace");
+            tk->current = tk->current+1;
+            break;
+            
+        case ']':
+            
+            tk->token[0] = ']';
+            tk->token[1] = '\0';
+            
+            printf("rightbrace");
+            tk->current = tk->current+1;
+            break;
+            
+        case '.':
+            
+            tk->token[0] = '.';
+            tk->token[1] = '\0';
+            
+            printf("structuremember");
+            tk->current = tk->current+1;
+            break;
+            
+            
+            //CONTINUE HERE
+            
+        case '=':
+            
+            tk->token[0] = '=';
+            
+            
+            if(token[1] == '='){
+                
+                tk->token[1] = '=';
+                tk->token[2] = '\0';
+                
+                printf("equals");
+                tk->current = tk->current+2;
+            }else{
+                
+                tk->token[1] = '\0';
+                
+                printf("assign");
+                tk->current = tk->current+1;
+            }
+            
+            break;
+            
+        case '+':
+            
+            tk->token[0] = '+';
+            
+            if(token[1] == '+'){
+                
+                tk->token[1] = '+';
+                tk->token[2] = '\0';
+                
+                printf("increment");
+                tk->current = tk->current+2;
+            }else if(token[1] == '='){
+                
+                tk->token[1] = '=';
+                tk->token[2] = '\0';
+                
+                printf("plusequals");
+                tk->current = tk->current+2;
+            }else{
+                
+                tk->token[1] = '\0';
+                
+                printf("plus");
+                tk->current = tk->current+1;
+            }
+            
+            
+            break;
+            
+        case '-':
+            
+            tk->token[0] = '-';
+            
+            if(token[1] == '-'){
+                
+                tk->token[1] = '-';
+                tk->token[2] = '\0';
+                
+                printf("decrement");
+                tk->current = tk->current+2;
+            }else if(token[1] == '='){
+                
+                tk->token[1] = '=';
+                tk->token[2] = '\0';
+                
+                printf("minusequals");
+                tk->current = tk->current+2;
+            }else if(token[1] == '>'){
+                
+                tk->token[1] = '>';
+                tk->token[2] = '\0';
+                
+                printf("structurepointer");
+                tk->current = tk->current+2;
+            }else{
+                
+                tk->token[1] = '\0';
+                
+                printf("minus");
+                tk->current = tk->current+1;
+            }
+            
+            
+            break;
+            
+        case '*':
+            
+            tk->token[0] = '*';
+            
+            
+            if(token[1] == '='){
+                
+                tk->token[1] = '=';
+                tk->token[2] = '\0';
+                
+                printf("timesequals");
+                tk->current = tk->current+2;
+            }else{
+                
+                tk->token[1] = '\0';
+                
+                printf("multiply");
+                tk->current = tk->current+1;
+            }
+            
+            
+            break;
+            
+        case '/':
+            
+            tk->token[0] = '/';
+            
+            if(token[1] == '='){
+                
+                tk->token[1] = '=';
+                tk->token[2] = '\0';
+                
+                printf("divideequals");
+                tk->current = tk->current+2;
+            }else{
+                
+                tk->token[1] = '\0';
+                
+                printf("divide");
+                tk->current = tk->current+1;
+            }
+            
+            
+            break;
+            
+        case '&':
+            
+            tk->token[0] = '&';
+            
+            if(token[1] == '='){
+                
+                tk->token[1] = '=';
+                tk->token[2] = '\0';
+                
+                printf("bitwiseandequals");
+                tk->current = tk->current+2;
+            }else if(token[1] == '&'){
+                
+                tk->token[1] = '&';
+                tk->token[2] = '\0';
+                
+                printf("logicaland");
+                tk->current = tk->current+2;
+            }else{
+                
+                tk->token[1] = '\0';
+                
+                printf("bitwiseand");
+                tk->current = tk->current+1;
+            }
+            
+            
+            break;
+            
+        case '%':
+            
+            tk->token[0] = '%';
+            
+            if(token[1] == '='){
+                
+                tk->token[1] = '=';
+                tk->token[2] = '\0';
+                
+                printf("modulusequals");
+                tk->current = tk->current+2;
+            }else{
+                
+                tk->token[1] = '\0';
+                
+                printf("modulus");
+                tk->current = tk->current+1;
+            }
+            
+            break;
+            
+        case '^':
+            
+            tk->token[0] = '^';
+            
+            
+            if(token[1] == '='){
+                
+                tk->token[1] = '=';
+                tk->token[2] = '\0';
+                
+                printf("bitwiseexclusiveorequals");
+                tk->current = tk->current+2;
+            }else{
+                
+                tk->token[1] = '\0';
+                
+                printf("bitwiseexclusiveor");
+                tk->current = tk->current+1;
+            }
+            
+            break;
+            
+            
+        case '|':
+            
+            tk->token[0] = '|';
+            
+            
+            if(token[1] == '='){
+                
+                tk->token[1] = '=';
+                tk->token[2] = '\0';
+                
+                printf("bitwiseorequals");
+                tk->current = tk->current+2;
+            }else if(token[1] == '|'){
+                
+                tk->token[1] = '|';
+                tk->token[2] = '\0';
+                
+                printf("logicalor");
+                tk->current = tk->current+2;
+            }else{
+                
+                tk->token[1] = '\0';
+                
+                printf("bitwiseor");
+                tk->current = tk->current+1;
+            }
+            
+            break;
+            
+            
+        case '<':
+            
+            tk->token[0] = '<';
+            
+            if(token[1] == '='){
+                
+                tk->token[1] = '=';
+                tk->token[2] = '\0';
+                
+                printf("lessorequal");
+                tk->current = tk->current+2;
+            }else if(token[1] == '<'){
+                
+                tk->token[1] = '<';
+                
+                if(token[2] == '='){
+                    
+                    tk->token[2] = '=';
+                    tk->token[3] = '\0';
+                    
+                    printf("shiftleftequals");
+                    tk->current = tk->current+3;
+                }else{
+                    
+                    tk->token[2] = '\0';
+                    
+                    printf("shiftleft");
+                    tk->current = tk->current+2;
+                }
+            }else{
+                
+                tk->token[1] = '\0';
+                
+                printf("lessthan");
+                tk->current = tk->current+1;
+            }
+            
+            break;
+            
+        case '>':
+            
+            tk->token[0] = '>';
+            
+            if(token[1] == '='){
+                
+                tk->token[1] = '=';
+                tk->token[2] = '\0';
+                
+                printf("greaterorequal");
+                tk->current = tk->current+2;
+            }else if(token[1] == '>'){
+                
+                tk->token[1] = '>';
+                
+                if(token[2] == '='){
+                    
+                    tk->token[2] = '=';
+                    tk->token[3] = '\0';
+                    
+                    printf("shiftrightequals");
+                    tk->current = tk->current+3;
+                }else{
+                    
+                    tk->token[2] = '\0';
+                    
+                    printf("shiftright");
+                    tk->current = tk->current+2;
+                }
+            }else{
+                
+                tk->token[1] = '\0';
+                
+                printf("greaterthan");
+                tk->current = tk->current+1;
+            }
+            
+            break;
+            
+            
+        case '!':
+            
+            tk->token[0] = '!';
+            
+            if(token[1] == '='){
+                
+                tk->token[1] = '=';
+                tk->token[2] = '\0';
+                
+                printf("notequals");
+                tk->current = tk->current+2;
+            }else{
+                
+                tk->token[1] = '\0';
+                
+                printf("negate");
+                tk->current = tk->current+1;
+            }
+            
+            break;
+            
+            
+        case '~':
+            
+            tk->token[0] = '~';
+            tk->token[1] = '\0';
+            
+            printf("onescomplement");
+            tk->current = tk->current+1;
+            
+            break;
+            
+    }
+}
 
 /*
  * TKGetNextToken returns the next token from the token stream as a
@@ -510,9 +504,9 @@ void printOperator(TokenizerT * tk){
  */
 
 char *TKGetNextToken( TokenizerT * tk ) {
-
-	int i, j, index;
-
+    
+    int i, j, index;
+    
     for(i = 0; i < strlen(tk->current); i++){
         while(tk->current[i] == 0x20 || tk->current[i] == 0x09 || tk->current[i] == 0x0b || tk->current[i] == 0x0c || tk->current[i] == 0x0a || tk->current[i] == 0x0d){
             tk->current = &tk->current[1]; //deals with case of spaces in the beginning of input, multiple spaces
@@ -589,9 +583,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
             type = DECIMAL; //temporary
             return tk->token;
         } else if(!isalpha(tk->current[i]) && !isdigit(tk->current[i]) && tk->current[i] != '\0'){ //checks if it is an operator
-            
-			printOperator(tk);
-			
+            printOperator(tk);
             type = C_OPERATOR; //temporary
             return tk->token;
         }
@@ -607,6 +599,9 @@ char *TKGetNextToken( TokenizerT * tk ) {
  */
 
 int main(int argc, char **argv) {
+    if(argv[1] == NULL){
+        return 1;
+    }
     TokenizerT *tk = TKCreate(argv[1]);
     while(tk->current[0] != '\0'){
         char *token = TKGetNextToken(tk);
