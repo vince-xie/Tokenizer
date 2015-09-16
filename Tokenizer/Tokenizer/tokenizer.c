@@ -142,7 +142,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
                     strncpy(tk->token, tk->current, j);
                     tk->token[j] = '\0';
                     tk->current = &tk->current[j];
-                    for(int index = 0; index < sizeof(KEYWORDS) / sizeof(KEYWORDS[0]); index++){
+                    for(int index = 0; index < sizeof(KEYWORDS) / sizeof(KEYWORDS[0]); index++){ //checks if C-keyword
                         if(strcmp(tk->token, KEYWORDS[index]) == 0){
                             type = C_KEYWORD;
                             break;
