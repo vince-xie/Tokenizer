@@ -74,6 +74,12 @@ void TKDestroy( TokenizerT * tk ) {
 }
 
 
+/*
+ * printOperator is called upon encountering a symbol in the string that belongs to a C Operator.
+ * It uses a switch statement on the first character of the string and then determines the full operator,
+ * which may be 1 2 or 3 characters long. It then prints that operator, makes the operator the new token, and shifts
+ * the current string pointer past the operator to advance on to the next token.
+ */
 void printOperator(TokenizerT * tk){
 	
 	char first;
@@ -512,7 +518,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
             tk->current = &tk->current[1]; //deals with case of spaces in the beginning of input, multiple spaces
         }
         if(tk->current[i] == 0x27){  //checks if single quote
-            for(int j = 1; j < strlen(tk->current); j++){
+            for(j = 1; j < strlen(tk->current); j++){
                 if(tk->current[j] == 0x27){
                     strncpy(tk->token, tk->current + 1, j - 1);
                     tk->token[j - 1] = '\0';
@@ -523,7 +529,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
             }
         }
         if(tk->current[i] == 0x22){ //checks if double quote
-            for(int j = 1; j < strlen(tk->current); j++){
+            for(j = 1; j < strlen(tk->current); j++){
                 if(tk->current[j] == 0x22){
                     strncpy(tk->token, tk->current + 1, j - 1);
                     tk->token[j - 1] = '\0';
@@ -534,7 +540,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
             }
         }
         if(tk->current[i] == '/' && tk->current[i + 1] == '*'){ //checks if in-line comment
-            for(int j = 2; j < strlen(tk->current); j++){
+            for(j = 2; j < strlen(tk->current); j++){
                 if(tk->current[j] == '*' && tk->current[j + 1] == '/'){
                     strncpy(tk->token, tk->current, j + 2);
                     tk->token[j + 2] = '\0';
@@ -545,7 +551,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
             }
         }
         if(tk->current[i] == '/' && tk->current[i + 1] == '/'){ //checks if multi-line comment
-            for(int j = 2; j < strlen(tk->current); j++){
+            for(j = 2; j < strlen(tk->current); j++){
                 if(tk->current[j] == '\n'){
                     strncpy(tk->token, tk->current, j + 2);
                     tk->token[j + 2] = '\0';
@@ -557,13 +563,13 @@ char *TKGetNextToken( TokenizerT * tk ) {
             return NULL;
         }
         if(isalpha(tk->current[i])){ //checks if word
-            for(int j = i; j <= strlen(tk->current); j++){
+            for(j = i; j <= strlen(tk->current); j++){
                 if(tk->current[j] == 0x20 || tk->current[j] == 0x09 || tk->current[j] == 0x0b || tk->current[j] == 0x0c || tk->current[j] == 0x0a || tk->current[j] == 0x0d || !isalnum(tk->current[j]) || tk->current[j] == '\0'){
                     if(j == 0){ j = 1; }
                     strncpy(tk->token, tk->current, j);
                     tk->token[j] = '\0';
                     tk->current = &tk->current[j];
-                    for(int index = 0; index < sizeof(KEYWORDS) / sizeof(KEYWORDS[0]); index++){ //checks if C-keyword
+                    for(index = 0; index < sizeof(KEYWORDS) / sizeof(KEYWORDS[0]); index++){ //checks if C-keyword
                         if(strcmp(tk->token, KEYWORDS[index]) == 0){
                             type = C_KEYWORD;
                             break;
