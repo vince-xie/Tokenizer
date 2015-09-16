@@ -156,6 +156,8 @@ void printOperator(TokenizerT * tk){
 				tk->current = tk->current+1;
 			}
 			
+			break;
+			
 		case '+':
 		
 			tk->token[0] = '+';
@@ -314,6 +316,8 @@ void printOperator(TokenizerT * tk){
 				tk->current = tk->current+1;
 			}
 			
+			break;
+			
 		case '^':
 		
 			tk->token[0] = '^';
@@ -334,7 +338,7 @@ void printOperator(TokenizerT * tk){
 				tk->current = tk->current+1;
 			}
 			
-
+			break;
 			
 		
 		case '|':
@@ -363,6 +367,8 @@ void printOperator(TokenizerT * tk){
 				printf("bitwiseor");
 				tk->current = tk->current+1;
 			}
+			
+			break;
 			
 		
 		case '<':
@@ -402,6 +408,8 @@ void printOperator(TokenizerT * tk){
 				tk->current = tk->current+1;
 			}
 			
+			break;
+			
 		case '>':
 		
 			tk->token[0] = '>';
@@ -438,6 +446,8 @@ void printOperator(TokenizerT * tk){
 				printf("greaterthan");
 				tk->current = tk->current+1;
 			}
+			
+			break;
 		
 		
 		case '!':
@@ -459,6 +469,8 @@ void printOperator(TokenizerT * tk){
 				tk->current = tk->current+1;
 			}
 			
+			break;
+			
 		
 		case '~':
 		
@@ -468,8 +480,11 @@ void printOperator(TokenizerT * tk){
 			printf("onescomplement");
 			tk->current = tk->current+1;
 		
+			break;
 		
 	}
+	
+	
 	
 	
 	
@@ -567,10 +582,9 @@ char *TKGetNextToken( TokenizerT * tk ) {
             type = DECIMAL; //temporary
             return tk->token;
         } else if(!isalpha(tk->current[i]) && !isdigit(tk->current[i]) && tk->current[i] != '\0'){ //checks if it is an operator
-            if(i == 0){ i = 1; }
-            strncpy(tk->token, tk->current, i);
-            tk->token[i] = '\0';
-            tk->current = &tk->current[i];
+            
+			printOperator(tk);
+			
             type = C_OPERATOR; //temporary
             return tk->token;
         }
@@ -609,7 +623,6 @@ int main(int argc, char **argv) {
                 printf("Floating Point");
                 break;
             case C_OPERATOR:
-                printf("C Operator");
                 break;
             case C_KEYWORD:
                 printf("C Keyword");
