@@ -60,7 +60,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "&quot; [3]apple test token if union char3 += 53 /* asfsfasfaasfasfasfsffaa */test  &quot;"
+            argument = "&quot; [3]apple T3st3et 3volatile&apos;hello&apos;if += 53 /* asfsfasfaasfasfasfsffaa */test  &apos;h&apos;&quot;"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
