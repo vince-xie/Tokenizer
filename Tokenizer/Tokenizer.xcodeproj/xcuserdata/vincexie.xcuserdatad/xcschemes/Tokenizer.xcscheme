@@ -61,10 +61,6 @@
       <CommandLineArguments>
          <CommandLineArgument
             argument = "&quot; [3]apple T3st3et 3volatile&apos;hello&apos;if += 53 /* asfsfasfaasfasfasfsffaa */test  \&quot;&apos;h&apos;\&quot;&apos;asfasf aswqr12&apos;&quot;"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = ""
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
