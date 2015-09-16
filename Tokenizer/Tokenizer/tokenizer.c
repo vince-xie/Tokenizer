@@ -75,8 +75,8 @@ void TKDestroy( TokenizerT * tk ) {
 
 /*
  * printOperator is called upon encountering a symbol in the string that belongs to a C Operator.
- * It uses a switch statement on the first character of the string and then determines the full operator,
- * which may be 1 2 or 3 characters long. It then prints that operator, makes the operator the new token, and shifts
+ * It uses a switch statement on the first character of the string and then determines the full operator using if-else structure,
+ * which may be 1 2 or 3 characters long. It then prints that operator's name, makes the operator the new token, and shifts
  * the current string pointer past the operator to advance on to the next token.
  */
 void printOperator(TokenizerT * tk){
@@ -139,8 +139,6 @@ void printOperator(TokenizerT * tk){
             tk->current = tk->current+1;
             break;
             
-            
-            //CONTINUE HERE
             
         case '=':
             
