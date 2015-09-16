@@ -73,7 +73,7 @@ void TKDestroy( TokenizerT * tk ) {
     free(tk);
 }
 
-<<<<<<< HEAD
+
 void printOperator(TokenizerT * tk){
 	
 	char first;
@@ -491,8 +491,6 @@ void printOperator(TokenizerT * tk){
 	
  }
 
-=======
->>>>>>> origin/master
 /*
  * TKGetNextToken returns the next token from the token stream as a
  * character string.  Space for the returned token should be dynamically
@@ -513,13 +511,8 @@ char *TKGetNextToken( TokenizerT * tk ) {
         while(tk->current[i] == 0x20 || tk->current[i] == 0x09 || tk->current[i] == 0x0b || tk->current[i] == 0x0c || tk->current[i] == 0x0a || tk->current[i] == 0x0d){
             tk->current = &tk->current[1]; //deals with case of spaces in the beginning of input, multiple spaces
         }
-<<<<<<< HEAD
-        if(tk->current[i] == 0x27){  //checks if quote
-            for(j = 1; j < strlen(tk->current); j++){
-=======
         if(tk->current[i] == 0x27){  //checks if single quote
             for(int j = 1; j < strlen(tk->current); j++){
->>>>>>> origin/master
                 if(tk->current[j] == 0x27){
                     strncpy(tk->token, tk->current + 1, j - 1);
                     tk->token[j - 1] = '\0';
@@ -529,13 +522,8 @@ char *TKGetNextToken( TokenizerT * tk ) {
                 }
             }
         }
-<<<<<<< HEAD
-        if(tk->current[i] == 0x22){
-            for(j = 1; j < strlen(tk->current); j++){
-=======
         if(tk->current[i] == 0x22){ //checks if double quote
             for(int j = 1; j < strlen(tk->current); j++){
->>>>>>> origin/master
                 if(tk->current[j] == 0x22){
                     strncpy(tk->token, tk->current + 1, j - 1);
                     tk->token[j - 1] = '\0';
@@ -545,13 +533,8 @@ char *TKGetNextToken( TokenizerT * tk ) {
                 }
             }
         }
-<<<<<<< HEAD
-        if(tk->current[i] == '/' && tk->current[i + 1] == '*'){ //checks if comment
-            for(j = 2; j < strlen(tk->current); j++){
-=======
         if(tk->current[i] == '/' && tk->current[i + 1] == '*'){ //checks if in-line comment
             for(int j = 2; j < strlen(tk->current); j++){
->>>>>>> origin/master
                 if(tk->current[j] == '*' && tk->current[j + 1] == '/'){
                     strncpy(tk->token, tk->current, j + 2);
                     tk->token[j + 2] = '\0';
@@ -561,13 +544,8 @@ char *TKGetNextToken( TokenizerT * tk ) {
                 }
             }
         }
-<<<<<<< HEAD
-        if(tk->current[i] == '/' && tk->current[i + 1] == '/'){
-            for(j = 2; j < strlen(tk->current); j++){
-=======
         if(tk->current[i] == '/' && tk->current[i + 1] == '/'){ //checks if multi-line comment
             for(int j = 2; j < strlen(tk->current); j++){
->>>>>>> origin/master
                 if(tk->current[j] == '\n'){
                     strncpy(tk->token, tk->current, j + 2);
                     tk->token[j + 2] = '\0';
@@ -579,22 +557,13 @@ char *TKGetNextToken( TokenizerT * tk ) {
             return NULL;
         }
         if(isalpha(tk->current[i])){ //checks if word
-<<<<<<< HEAD
-            for(j = i; j <= strlen(tk->current); j++){
-                if(tk->current[j] == 0x20 || tk->current[j] == 0x09 || tk->current[j] == 0x0b || tk->current[j] == 0x0c || tk->current[j] == 0x0a || tk->current[j] == 0x0d || !isalpha(tk->current[j]) || tk->current[j] == '\0'){
-=======
             for(int j = i; j <= strlen(tk->current); j++){
                 if(tk->current[j] == 0x20 || tk->current[j] == 0x09 || tk->current[j] == 0x0b || tk->current[j] == 0x0c || tk->current[j] == 0x0a || tk->current[j] == 0x0d || !isalnum(tk->current[j]) || tk->current[j] == '\0'){
->>>>>>> origin/master
                     if(j == 0){ j = 1; }
                     strncpy(tk->token, tk->current, j);
                     tk->token[j] = '\0';
                     tk->current = &tk->current[j];
-<<<<<<< HEAD
-                    for(index = 0; index < sizeof(KEYWORDS) / sizeof(KEYWORDS[0]); index++){
-=======
                     for(int index = 0; index < sizeof(KEYWORDS) / sizeof(KEYWORDS[0]); index++){ //checks if C-keyword
->>>>>>> origin/master
                         if(strcmp(tk->token, KEYWORDS[index]) == 0){
                             type = C_KEYWORD;
                             break;
