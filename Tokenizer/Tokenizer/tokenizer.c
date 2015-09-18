@@ -82,7 +82,6 @@ void TKDestroy( TokenizerT * tk ) {
 void printOperator(TokenizerT * tk){
     
     char first;
-    int bool;
     
     char * token = tk->current;
     
