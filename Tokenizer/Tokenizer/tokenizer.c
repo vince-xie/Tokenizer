@@ -506,7 +506,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
     int i, j, index;
     
     for(i = 0; i < strlen(tk->current); i++){
-        while(tk->current[i] == 0x20 || tk->current[i] == 0x09 || tk->current[i] == 0x0b || tk->current[i] == 0x0c || tk->current[i] == 0x0a || tk->current[i] == 0x0d){
+        while(isspace(tk->current[i])){
             tk->current = &tk->current[1]; //deals with case of spaces in the beginning of input, multiple spaces
         }
         if(tk->current[i] == 0x27){  //checks if single quote
@@ -556,7 +556,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
         }
         if(isalpha(tk->current[i])){ //checks if word
             for(j = i; j <= strlen(tk->current); j++){
-                if(tk->current[j] == 0x20 || tk->current[j] == 0x09 || tk->current[j] == 0x0b || tk->current[j] == 0x0c || tk->current[j] == 0x0a || tk->current[j] == 0x0d || !isalnum(tk->current[j]) || tk->current[j] == '\0'){
+                if(isspace(tk->current[j]) || !isalnum(tk->current[j]) || tk->current[j] == '\0'){
                     if(j == 0){ j = 1; }
                     strncpy(tk->token, tk->current, j);
                     tk->token[j] = '\0';
