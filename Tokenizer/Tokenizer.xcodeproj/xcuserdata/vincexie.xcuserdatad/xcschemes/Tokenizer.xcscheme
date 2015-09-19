@@ -63,8 +63,12 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "&quot; [3]apple T3st3et 3volatile&apos;hello&apos;if += 53 /* asfsfasfaasfasfasfsffaa */test  \&quot;&apos;h&apos;\&quot;&apos;asfasf aswqr12&apos;&quot;"
+            argument = "&quot;3500.23e44&quot;"
             isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "&quot;se [3]apple 0.3 3volatile&apos;hello&apos;if+=053/* asfsffasfsffaa */test  \&quot;&apos;h&apos;\&quot;&apos;asfasf aswqr12&apos; 0.3eq&quot;"
+            isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
       <AdditionalOptions>

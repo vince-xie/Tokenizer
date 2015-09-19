@@ -73,6 +73,16 @@ void TKDestroy( TokenizerT * tk ) {
     free(tk);
 }
 
+/* Copies a substring from the input to the current token and sets the type
+ * @params Pointer to tokenizer, length, type
+ */
+void copySubstringToTokenSetType(TokenizerT * tk, int index, enum Type newType){
+    strncpy(tk->token, tk->current, index);
+    tk->token[index] = '\0';
+    tk->current+=index;
+    type = newType;
+}
+
 /*
  * printOperator is called upon encountering a symbol in the string that belongs to a C Operator.
  * It uses a switch statement on the first character of the string and then determines the full operator using if-else structure,
@@ -488,6 +498,189 @@ void printOperator(TokenizerT * tk){
     }
 }
 
+/* getNumber() is called when TKGetNextToken() encounters a digit.
+ * getNumber() returns the type of numeric representation and sets the
+ * next token equal to it. It returns an error if there is something wrong
+ * with the number representation.
+ * @param tokenizer tk
+ */
+void getNumber(TokenizerT *tk){
+    int i, j, k;
+    if(tk->current[0] == '0'){
+        if(tk->current[1] == 'x' || tk->current[1] == 'X'){
+            if(!isdigit(tk->current[2]) && tk->current[2] != 'a' && tk->current[2] != 'b' && tk->current[2] != 'c' && tk->current[2] != 'd' && tk->current[2] != 'e' && tk->current[2] != 'f' && tk->current[2] != 'A' && tk->current[2] != 'B' && tk->current[2] != 'C' && tk->current[2] != 'D' && tk->current[2] != 'E' && tk->current[2] != 'F'){
+                tk->token[0] = '0';
+                tk->token[1] = tk->current[1];
+                tk->token[2] = '\0';
+                tk->current += 2;
+                type = MAL;
+                return;
+            }
+            for(i = 2; i <= strlen(tk->current); i++){
+                if(!isdigit(tk->current[i]) && tk->current[i] != 'a' && tk->current[i] != 'b' && tk->current[i] != 'c' && tk->current[i] != 'd' && tk->current[i] != 'e' && tk->current[i] != 'f' && tk->current[i] != 'A' && tk->current[i] != 'B' && tk->current[i] != 'C' && tk->current[i] != 'D' && tk->current[i] != 'E' && tk->current[i] != 'F'){
+                    strncpy(tk->token, tk->current, i);
+                    tk->token[i] = '\0';
+                    tk->current+=i;
+                    type = HEX;
+                    return;
+                }
+            }
+        }
+        if(isdigit(tk->current[1]) && tk->current[1] != '9' && tk->current[1] != '8'){
+            for(i = 0; i <= strlen(tk->current); i++){
+                if(!isdigit(tk->current[i])){
+                    strncpy(tk->token, tk->current, i);
+                    tk->token[i] = '\0';
+                    tk->current+=i;
+                    type = OCTAL;
+                    return;
+                }
+                if(tk->current[i] == '8' || tk->current[i] == '9'){
+                    for(j = i; j <= strlen(tk->current); j++){
+                        if(!isdigit(tk->current[j])){
+                            strncpy(tk->token, tk->current, j);
+                            tk->token[j] = '\0';
+                            tk->current+=j;
+                            type = DECIMAL;
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+        if(tk->current[1] == '.'){
+            if(isdigit(tk->current[2])){
+                for(i = 2; i <= strlen(tk->current); i++){
+                    if(!isdigit(tk->current[i])){
+                        if(tk->current[i] == 'e' || tk->current[i] == 'E'){
+                            if(tk->current[i + 1] == '+' || tk->current[i + 1] == '-'){
+                                if(isdigit(tk->current[i + 2])){
+                                    for(j = i + 2; j <= strlen(tk->current); j++){
+                                        if(!isdigit(tk->current[j])){
+                                            strncpy(tk->token, tk->current, j);
+                                            tk->token[j] = '\0';
+                                            tk->current = tk->current + j;
+                                            type = FLOATING_POINT;
+                                            return;
+                                        }
+                                    }
+                                } else {
+                                    strncpy(tk->token, tk->current, i + 2);
+                                    tk->token[i + 2] = '\0';
+                                    tk->current = tk->current + i + 2;
+                                    type = MAL;
+                                    return;
+                                }
+                            } else if(isdigit(tk->current[i + 1])){
+                                for(j = i + 1; j <= strlen(tk->current); j++){
+                                    if(!isdigit(tk->current[j])){
+                                        strncpy(tk->token, tk->current, j);
+                                        tk->token[j] = '\0';
+                                        tk->current = tk->current + j;
+                                        type = FLOATING_POINT;
+                                        return;
+                                    }
+                                }
+                            } else {
+                                strncpy(tk->token, tk->current, i + 1);
+                                tk->token[i + 1] = '\0';
+                                tk->current = tk->current + i + 1;
+                                type = MAL;
+                                return;
+                            }
+                        }
+                        strncpy(tk->token, tk->current, i);
+                        tk->token[i] = '\0';
+                        tk->current+=i;
+                        type = FLOATING_POINT;
+                        return;
+                    }
+                }
+            } else {
+                tk->token[0] = '0';
+                tk->token[1] = '.';
+                tk->token[2] = '\0';
+                tk->current+=2;
+                type = MAL;
+                return;
+            }
+        }
+        tk->token[0] = '0';
+        tk->token[1] = '\0';
+        type = DECIMAL;
+        tk->current++;
+    } else {
+        for(i = 0; i <= strlen(tk->current); i++){
+            if(tk->current[i] == '.'){
+                if(isdigit(tk->current[i + 1])){
+                    for(j = i + 1; j <= strlen(tk->current); j++){
+                        if(!isdigit(tk->current[j])){
+                            if(tk->current[j] == 'e' || tk->current[j] == 'E'){
+                                if(tk->current[j + 1] == '+' || tk->current[j + 1] == '-'){
+                                    if(isdigit(tk->current[j + 2])){
+                                        for(k = i + 2; k <= strlen(tk->current); k++){
+                                            if(!isdigit(tk->current[k])){
+                                                strncpy(tk->token, tk->current, k);
+                                                tk->token[k] = '\0';
+                                                tk->current = tk->current + k;
+                                                type = FLOATING_POINT;
+                                                return;
+                                            }
+                                        }
+                                    } else {
+                                        strncpy(tk->token, tk->current, j + 2);
+                                        tk->token[j + 2] = '\0';
+                                        tk->current = tk->current + j + 2;
+                                        type = MAL;
+                                        return;
+                                    }
+                                } else if(isdigit(tk->current[j + 1])){
+                                    for(k = i + 1; k <= strlen(tk->current); k++){
+                                        if(!isdigit(tk->current[j])){
+                                            strncpy(tk->token, tk->current, k);
+                                            tk->token[j] = '\0';
+                                            tk->current = tk->current + k;
+                                            type = FLOATING_POINT;
+                                            return;
+                                        }
+                                    }
+                                } else {
+                                    strncpy(tk->token, tk->current, j + 1);
+                                    tk->token[j + 1] = '\0';
+                                    tk->current = tk->current + j + 1;
+                                    type = MAL;
+                                    return;
+                                }
+                            }
+                            strncpy(tk->token, tk->current, j);
+                            tk->token[j] = '\0';
+                            tk->current+=j;
+                            type = FLOATING_POINT;
+                            return;
+                        }
+                    }
+                } else {
+                    tk->token[0] = '0';
+                    tk->token[1] = '.';
+                    tk->token[2] = '\0';
+                    tk->current+=2;
+                    type = MAL;
+                    return;
+                }
+            }
+        }
+        for(i = 0; i <= strlen(tk->current); i++){
+            if(!isdigit(tk->current[i])){
+                strncpy(tk->token, tk->current, i);
+                tk->token[i] = '\0';
+                tk->current+=i;
+                type = DECIMAL;
+                return;
+            }
+        }
+    }
+}
+
 /*
  * TKGetNextToken returns the next token from the token stream as a
  * character string.  Space for the returned token should be dynamically
@@ -573,15 +766,11 @@ char *TKGetNextToken( TokenizerT * tk ) {
             }
         }
         if(isdigit(tk->current[i])){ //checks if a numeric representation
-            if(i == 0){ i = 1; }
-            strncpy(tk->token, tk->current, i);
-            tk->token[i] = '\0';
-            tk->current = &tk->current[i];
-            type = DECIMAL; //temporary
+            getNumber(tk);
             return tk->token;
         } else if(!isalpha(tk->current[i]) && !isdigit(tk->current[i]) && tk->current[i] != '\0'){ //checks if it is an operator
             printOperator(tk);
-            type = C_OPERATOR; //temporary
+            type = C_OPERATOR;
             return tk->token;
         }
     }
