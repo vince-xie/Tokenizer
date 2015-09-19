@@ -514,14 +514,12 @@ void getNumber(TokenizerT *tk){
                 tk->token[2] = '\0';
                 tk->current += 2;
                 type = MAL;
+                printf("Malformed Hex");
                 return;
             }
             for(i = 2; i <= strlen(tk->current); i++){
                 if(!isdigit(tk->current[i]) && tk->current[i] != 'a' && tk->current[i] != 'b' && tk->current[i] != 'c' && tk->current[i] != 'd' && tk->current[i] != 'e' && tk->current[i] != 'f' && tk->current[i] != 'A' && tk->current[i] != 'B' && tk->current[i] != 'C' && tk->current[i] != 'D' && tk->current[i] != 'E' && tk->current[i] != 'F'){
-                    strncpy(tk->token, tk->current, i);
-                    tk->token[i] = '\0';
-                    tk->current+=i;
-                    type = HEX;
+                    copySubstringToTokenSetType(tk, i, HEX);
                     return;
                 }
             }
@@ -529,19 +527,13 @@ void getNumber(TokenizerT *tk){
         if(isdigit(tk->current[1]) && tk->current[1] != '9' && tk->current[1] != '8'){
             for(i = 0; i <= strlen(tk->current); i++){
                 if(!isdigit(tk->current[i])){
-                    strncpy(tk->token, tk->current, i);
-                    tk->token[i] = '\0';
-                    tk->current+=i;
-                    type = OCTAL;
+                    copySubstringToTokenSetType(tk, i, OCTAL);
                     return;
                 }
                 if(tk->current[i] == '8' || tk->current[i] == '9'){
                     for(j = i; j <= strlen(tk->current); j++){
                         if(!isdigit(tk->current[j])){
-                            strncpy(tk->token, tk->current, j);
-                            tk->token[j] = '\0';
-                            tk->current+=j;
-                            type = DECIMAL;
+                            copySubstringToTokenSetType(tk, j, DECIMAL);
                             return;
                         }
                     }
@@ -557,42 +549,29 @@ void getNumber(TokenizerT *tk){
                                 if(isdigit(tk->current[i + 2])){
                                     for(j = i + 2; j <= strlen(tk->current); j++){
                                         if(!isdigit(tk->current[j])){
-                                            strncpy(tk->token, tk->current, j);
-                                            tk->token[j] = '\0';
-                                            tk->current = tk->current + j;
-                                            type = FLOATING_POINT;
+                                            copySubstringToTokenSetType(tk, j, FLOATING_POINT);
                                             return;
                                         }
                                     }
                                 } else {
-                                    strncpy(tk->token, tk->current, i + 2);
-                                    tk->token[i + 2] = '\0';
-                                    tk->current = tk->current + i + 2;
-                                    type = MAL;
+                                    copySubstringToTokenSetType(tk, i + 2, MAL);
+                                    printf("Malformed Floating Point Number");
                                     return;
                                 }
                             } else if(isdigit(tk->current[i + 1])){
                                 for(j = i + 1; j <= strlen(tk->current); j++){
                                     if(!isdigit(tk->current[j])){
-                                        strncpy(tk->token, tk->current, j);
-                                        tk->token[j] = '\0';
-                                        tk->current = tk->current + j;
-                                        type = FLOATING_POINT;
+                                        copySubstringToTokenSetType(tk, j, FLOATING_POINT);
                                         return;
                                     }
                                 }
                             } else {
-                                strncpy(tk->token, tk->current, i + 1);
-                                tk->token[i + 1] = '\0';
-                                tk->current = tk->current + i + 1;
-                                type = MAL;
+                                copySubstringToTokenSetType(tk, i + 1, MAL);
+                                printf("Malformed Floating Point Number");
                                 return;
                             }
                         }
-                        strncpy(tk->token, tk->current, i);
-                        tk->token[i] = '\0';
-                        tk->current+=i;
-                        type = FLOATING_POINT;
+                        copySubstringToTokenSetType(tk, i, FLOATING_POINT);
                         return;
                     }
                 }
@@ -602,6 +581,7 @@ void getNumber(TokenizerT *tk){
                 tk->token[2] = '\0';
                 tk->current+=2;
                 type = MAL;
+                printf("Malformed Floating Point Number");
                 return;
             }
         }
@@ -613,68 +593,82 @@ void getNumber(TokenizerT *tk){
         for(i = 0; i <= strlen(tk->current); i++){
             if(tk->current[i] == '.'){
                 if(isdigit(tk->current[i + 1])){
-                    for(j = i + 1; j <= strlen(tk->current); j++){
+                    for(j = i + 2; j <= strlen(tk->current); j++){
                         if(!isdigit(tk->current[j])){
                             if(tk->current[j] == 'e' || tk->current[j] == 'E'){
                                 if(tk->current[j + 1] == '+' || tk->current[j + 1] == '-'){
                                     if(isdigit(tk->current[j + 2])){
-                                        for(k = i + 2; k <= strlen(tk->current); k++){
+                                        for(k = j + 2; k <= strlen(tk->current); k++){
                                             if(!isdigit(tk->current[k])){
-                                                strncpy(tk->token, tk->current, k);
-                                                tk->token[k] = '\0';
-                                                tk->current = tk->current + k;
-                                                type = FLOATING_POINT;
+                                                copySubstringToTokenSetType(tk, k, FLOATING_POINT);
                                                 return;
                                             }
                                         }
                                     } else {
-                                        strncpy(tk->token, tk->current, j + 2);
-                                        tk->token[j + 2] = '\0';
-                                        tk->current = tk->current + j + 2;
-                                        type = MAL;
+                                        copySubstringToTokenSetType(tk, j + 2, MAL);
+                                        printf("Malformed Floating Point Number");
                                         return;
                                     }
                                 } else if(isdigit(tk->current[j + 1])){
-                                    for(k = i + 1; k <= strlen(tk->current); k++){
-                                        if(!isdigit(tk->current[j])){
-                                            strncpy(tk->token, tk->current, k);
-                                            tk->token[j] = '\0';
-                                            tk->current = tk->current + k;
-                                            type = FLOATING_POINT;
+                                    for(k = j + 1; k <= strlen(tk->current); k++){
+                                        if(!isdigit(tk->current[k])){
+                                            copySubstringToTokenSetType(tk, k, FLOATING_POINT);
                                             return;
                                         }
                                     }
                                 } else {
-                                    strncpy(tk->token, tk->current, j + 1);
-                                    tk->token[j + 1] = '\0';
-                                    tk->current = tk->current + j + 1;
-                                    type = MAL;
+                                    copySubstringToTokenSetType(tk, j + 1, MAL);
+                                    printf("Malformed Floating Point Number");
                                     return;
                                 }
                             }
-                            strncpy(tk->token, tk->current, j);
-                            tk->token[j] = '\0';
-                            tk->current+=j;
-                            type = FLOATING_POINT;
+                            copySubstringToTokenSetType(tk, j, FLOATING_POINT);
                             return;
                         }
                     }
                 } else {
-                    tk->token[0] = '0';
+                    tk->token[0] = tk->current[0];
                     tk->token[1] = '.';
                     tk->token[2] = '\0';
                     tk->current+=2;
                     type = MAL;
+                    printf("Malformed Floating Point Number");
+                    return;
+                }
+            }
+        }
+        for(i = 0; i <= strlen(tk->current); i++){
+            if(tk->current[i] == 'e' || tk->current[i] == 'E'){
+                if(tk->current[i + 1] == '+' || tk->current[i + 1] == '-'){
+                    if(isdigit(tk->current[i + 2])){
+                        for(j = i + 2; j <= strlen(tk->current); j++){
+                            if(!isdigit(tk->current[j])){
+                                copySubstringToTokenSetType(tk, j, FLOATING_POINT);
+                                return;
+                            }
+                        }
+                    } else {
+                        copySubstringToTokenSetType(tk, i + 2, MAL);
+                        printf("Malformed Floating Point Number");
+                        return;
+                    }
+                } else if(isdigit(tk->current[i + 1])){
+                    for(j = i + 1; j <= strlen(tk->current); j++){
+                        if(!isdigit(tk->current[j])){
+                            copySubstringToTokenSetType(tk, j, FLOATING_POINT);
+                            return;
+                        }
+                    }
+                } else {
+                    copySubstringToTokenSetType(tk, i + 1, MAL);
+                    printf("Malformed Floating Point Number");
                     return;
                 }
             }
         }
         for(i = 0; i <= strlen(tk->current); i++){
             if(!isdigit(tk->current[i])){
-                strncpy(tk->token, tk->current, i);
-                tk->token[i] = '\0';
-                tk->current+=i;
-                type = DECIMAL;
+                copySubstringToTokenSetType(tk, i, DECIMAL);
                 return;
             }
         }
@@ -821,7 +815,6 @@ int main(int argc, char **argv) {
                 printf("Quote");
                 break;
             case MAL:
-                printf("Error");
                 break;
         }
         if(type != C_COMMENT && type != C_KEYWORD){
