@@ -626,7 +626,7 @@ void getNumber(TokenizerT *tk){
                             return;
                         }
                     }
-                } else {
+                }else {
                     tk->token[0] = tk->current[0];
                     tk->token[1] = '.';
                     tk->token[2] = '\0';
@@ -634,7 +634,10 @@ void getNumber(TokenizerT *tk){
                     type = MAL;
                     printf("Malformed Floating Point Number");
                     return;
-                }
+                } 
+            } else if(!isdigit(tk->current[i])){
+                copySubstringToTokenSetType(tk, i, DECIMAL);
+                return;
             }
         }
         for(i = 0; i <= strlen(tk->current); i++){
