@@ -636,7 +636,7 @@ void getNumber(TokenizerT *tk){
                             return;
                         }
                     }
-                }else {
+                } else {
                     tk->token[0] = tk->current[0];
                     tk->token[1] = '.';
                     tk->token[2] = '\0';
@@ -645,13 +645,7 @@ void getNumber(TokenizerT *tk){
                     printf("Malformed Floating Point Number");
                     return;
                 } 
-            } else if(!isdigit(tk->current[i])){
-                copySubstringToTokenSetType(tk, i, DECIMAL);
-                return;
-            }
-        }
-        for(i = 0; i <= strlen(tk->current); i++){
-            if(tk->current[i] == 'e' || tk->current[i] == 'E'){
+            } else if(tk->current[i] == 'e' || tk->current[i] == 'E'){
                 if(tk->current[i + 1] == '+' || tk->current[i + 1] == '-'){
                     if(isdigit(tk->current[i + 2])){
                         for(j = i + 2; j <= strlen(tk->current); j++){
@@ -677,6 +671,9 @@ void getNumber(TokenizerT *tk){
                     printf("Malformed Floating Point Number");
                     return;
                 }
+            } else if(!isdigit(tk->current[i]) && tk->current[i] != 'e' && tk->current[i] != 'E'){
+                copySubstringToTokenSetType(tk, i, DECIMAL);
+                return;
             }
         }
         for(i = 0; i <= strlen(tk->current); i++){
@@ -730,7 +727,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
                 }
             }
         }
-        if(tk->current[i] == '/' && tk->current[i + 1] == '*'){ //checks if in-line comment
+        if(tk->current[i] == '/' && tk->current[i + 1] == '*'){ //checks if multi-line comment
             for(j = 2; j < strlen(tk->current); j++){
                 if(tk->current[j] == '*' && tk->current[j + 1] == '/'){
                     strncpy(tk->token, tk->current, j + 2);
@@ -741,7 +738,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
                 }
             }
         }
-        if(tk->current[i] == '/' && tk->current[i + 1] == '/'){ //checks if multi-line comment
+        if(tk->current[i] == '/' && tk->current[i + 1] == '/'){ //checks if in-line comment
             for(j = 2; j < strlen(tk->current); j++){
                 if(tk->current[j] == '\n'){
                     strncpy(tk->token, tk->current, j + 2);
