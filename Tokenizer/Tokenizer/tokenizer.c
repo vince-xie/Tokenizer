@@ -730,10 +730,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
         if(tk->current[i] == '/' && tk->current[i + 1] == '*'){ //checks if multi-line comment
             for(j = 2; j < strlen(tk->current); j++){
                 if(tk->current[j] == '*' && tk->current[j + 1] == '/'){
-                    strncpy(tk->token, tk->current, j + 2);
-                    tk->token[j + 2] = '\0';
-                    tk->current = &tk->current[j + 2];
-                    type = C_COMMENT;
+                    copySubstringToTokenSetType(tk, j + 2, C_COMMENT);
                     return tk->token;
                 }
             }
@@ -741,10 +738,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
         if(tk->current[i] == '/' && tk->current[i + 1] == '/'){ //checks if in-line comment
             for(j = 2; j < strlen(tk->current); j++){
                 if(tk->current[j] == '\n'){
-                    strncpy(tk->token, tk->current, j + 2);
-                    tk->token[j + 2] = '\0';
-                    tk->current = &tk->current[j + 2];
-                    type = C_COMMENT;
+                    copySubstringToTokenSetType(tk, j + 2, C_COMMENT);
                     return tk->token;
                 }
             }

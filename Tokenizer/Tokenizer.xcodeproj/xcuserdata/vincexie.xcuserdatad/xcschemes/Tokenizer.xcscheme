@@ -63,12 +63,12 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "&quot;3.1E-&quot;"
-            isEnabled = "YES">
-         </CommandLineArgument>
-         <CommandLineArgument
             argument = "&quot;se [3]apple 0.3 3volatile&apos;hello&apos;if+=053/* asfsffasfsffaa */test  \&quot;&apos;h&apos;\&quot;&apos;asfasf aswqr12&apos; 0.3eq&quot;"
             isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "&quot;33/*afawfwafa*/22&quot;"
+            isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
       <AdditionalOptions>
