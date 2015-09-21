@@ -87,7 +87,8 @@ void copySubstringToTokenSetType(TokenizerT * tk, int index, enum Type newType){
  * printOperator is called upon encountering a symbol in the string that belongs to a C Operator.
  * It uses a switch statement on the first character of the string and then determines the full operator using if-else structure,
  * which may be 1 2 or 3 characters long. It then prints that operator's name, makes the operator the new token, and shifts
- * the current string pointer past the operator to advance on to the next token.
+ * the current string pointer past the operator to advance on to the next token. If the character does not fall into any of the cases,
+ * it is called an unidentified symbol.
  */
 void printOperator(TokenizerT * tk){
     
