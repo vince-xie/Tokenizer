@@ -28,5 +28,15 @@ Input					Expected output
 "0xFFFFG"				Hex "0xFFFF"
 						Word "G"
 						
+"0777"					Octal "0777"	
 						
+"//hello"				Nothing
+
+"/*hello*/"				Nothing
+
+"'a+6&^%$##ad;'"		Quote "a+6&^%$##ad;"	
+
+"\"a7tr4\""				Quote "a7tr4"
+
+				
 						
