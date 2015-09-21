@@ -1,0 +1,32 @@
+Input					Expected output
+
+"Hello world"			Word "Hello"
+						Word "World
+						
+""						Nothing
+
+"Hello+=world"			Word "Hello"
+						plusequals "+="
+						Word "world"
+						
+"Hello 8"				Word "Hello"
+						Decimal "8"
+						
+"int 7"					"int" Keyword
+						Decimal "7"
+						
+"double 8.3"			"double" Keyword
+						Floating Point "8.3"
+						
+"+=&&[]->%"				plusequals "+="
+						logicaland "&&"
+						leftbrace "["
+						rightbrace "]"
+						structurepointer "->"
+						modulus "%"
+						
+"0xFFFFG"				Hex "0xFFFF"
+						Word "G"
+						
+						
+						
