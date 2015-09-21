@@ -497,7 +497,7 @@ void printOperator(TokenizerT * tk){
 			
 		default:
 			tk->token[0] = first;
-			tk->token[1] = '\0'
+			tk->token[1] = '\0';
 			
 			printf("unidentified symbol");
 			tk->current = tk->current+1;
