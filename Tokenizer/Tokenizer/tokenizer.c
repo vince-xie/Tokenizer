@@ -783,6 +783,7 @@ char *TKGetNextToken( TokenizerT * tk ) {
 
 int main(int argc, char **argv) {
     if(argv[1] == NULL){
+        printf("Please enter a string surrounded by quotes as an argument.\n");
         return 1;
     }
     TokenizerT *tk = TKCreate(argv[1]);
